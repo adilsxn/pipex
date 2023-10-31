@@ -1,0 +1,85 @@
+#adb
+adb_setup:
+    "shell am start -a android.settings.AIRPLANE_MODE_SETTINGS": 
+        "timer": 2
+        "keyword": 
+        - "attach"
+        - "detach"
+    "shell am start -a  android.settings.DATA_ROAMING_SETTINGS":
+        "timer": 2
+        "keyword":
+        - "change_network_mode-2G"
+        - "change_network_mode-3G"
+        - "change_network_mode-4G"
+        - "change_network_mode-5G"
+
+adb_teardown:
+    "shell input keyevent KEYCODE_HOME": 
+        "timer": 2
+        "keyword": 
+        - "attach"
+        - "detach"
+
+warning_message:
+    - "Warning: Activity not started, its current task has been brought to the front"
+    - "Warning: Activity not started, intent has been delivered to currently running top-most instance."
+home_screen:
+    check:
+        "shell dumpsys window| grep 'mCurrentFocus='":
+            "check_value": "com.nokia.syve.uemanager.mobile"
+    action:
+        "shell input keyevent KEYCODE_BACK":
+            "timer": 2
+    retries: 5
+
+unlock_screen:
+    check:
+        "shell dumpsys window| grep 'mAwake='":
+            "check_value": "mAwake=true"
+    action:
+        "shell input keyevent 82":
+            "timer": 2
+    retries: 1
+active_screen: ""
+attach:
+    skip:
+        "shell settings get global airplane_mode_on":
+            "check_value": 0
+    action:
+        "shell input tap 943 377": 
+            "timer": 5
+detach:
+    skip: {}
+    action:
+        "shell input tap 943 377": 
+            "timer": 5
+
+get_radio_access_technology:
+    keyword: get_radio_access_technology
+
+set_wifi_on:
+    skip: {}
+    action:
+        "shell svc wifi enable":
+            "timer": 5
+
+set_wifi_off:
+    skip: {}
+    action:
+        "shell svc wifi disable":
+            "timer": 5
+
+set_mobile_data-0:
+    skip: {}
+    action:
+        "shell svc data disable":
+            "timer": 5
+
+set_mobile_data-1:
+    skip: {}
+    action:
+        "shell svc data enable":
+            "timer": 5
+
+data_browsing:
+    keyword: data_browsing

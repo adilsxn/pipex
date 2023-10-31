@@ -10,56 +10,63 @@
 #                                                                              #
 # **************************************************************************** #
 
-BSRCS      = $(shell find ./src/bonus -type f -name *.c)
-NAME       = pipex
+
+SRCS       = src/mandatory/utils.c src/mandatory/parser.c src/mandatory/pipex.c
+			 src/mandatory/main.c
+B_SRC      = src/bonus/utils_bonus.c src/bonus/parser_bonus.c src/bonus/pipex_bonus.c
+			 src/bonus/main_bonus
+OBJS       = ${SRCS:src/%.c=$(OBJ_DIR)/%.o}
+B_OBJS     = ${B_SRC:src/%.c=$(B_OBJ_DIR)/%.o}
+BUILD_DIR  = build
+OBJ_DIR    = ${BUILD_DIR}/obj
+B_OBJ_DIR  = ${BUILD_DIR}/b_obj
+INCS 	   = inc/
+NAME       = ${BUILD_DIR}/c_project
+B_NAME     = ${BUILD_DIR}/b_c_project
 CC         = cc
-CFLAGS     = -g -Wall -Wextra -Werror -fsanitize=address
-LIBFT 	   = -Llibft -lft
-RM         = rm -f
-INCS       = inc/
+CFLAGS     = -g -Wall -Wextra -Werror
+LDFLAGS 	 = -L./libft -lft
+RM         = rm -rf
 
 all: ${NAME}
 
-${NAME}: runlibft norm
-	${CC} ${CFLAGS} -o ${NAME} ${BSRCS}  -I ${INCS} ${LIBFT}
+$(OBJ_DIR)/%.o: src/%.c | $(BUILD_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCS) ${LDFLAGS}
 
-ignore: runlibft
-	${CC} $C{FLAGS} -o ${NAME} ${BSRCS}  -I ${INCS} ${LIBFT}
+${NAME}: ${OBJS} | $(BUILD_DIR)
+	@echo "Compiling c_project"
+	@make -s -C libft
+	@${CC} ${CFLAGS}  $^ -o $@  -I ${INCS} ${LDFLAGS}
+	@echo "c_project created"
+
+$(B_OBJ_DIR)/%.o: src/%.c | $(BUILD_DIR)
+	@$(CC) $(CFLAGS) -I $(INCS) -c $< -o $@
+
+bonus: ${B_NAME}
+
+${B_NAME}: ${B_OBJS} | $(BUILD_DIR)
+	@echo "Compiling b_c_project"
+	@make -s -C libft
+	@${CC} ${CFLAGS}  $^ -o ${B_NAME} -I ${INCS} ${LDFLAGS}
+	@echo "b_c_project created"
+
+${BUILD_DIR}:
+	@mkdir -p ${BUILD_DIR}
+	@mkdir -p ${OBJ_DIR} ${B_OBJ_DIR}
 
 clean:
-	${RM} ${NAME}
+	@${RM} ${OBJS} ${B_OBJS}
+	@make clean -s -C libft
 
 fclean: clean
-	make -C libft fclean
+	@${RM} ${BUILD_DIR}
+	@make fclean -s -C libft
+	@echo "c_project deleted"
 
 re: fclean all
 
-runlibft:
-	make -C libft
-
 norm:
-	norminette -R CheckForbiddenSourceHeader ${SRCS} ${BSRCS}
+	norminette -R CheckForbiddenSourceHeader ${SRCS}
 	norminette -R CheckDefine ${INCS}
-
-mandatory_path: all
-	@./pipex input.txt "/bin/grep give" "wc -l" output.txt
-
-mandatory_normal: all
-	@./pipex input.txt "grep give" "wc -l" output.txt
-
-mandatory_wpath: all
-	@./pipex input.txt "/bin/gret give" "wc -l" output.txt
-
-mandatory_wnormal: all
-	@./pipex input.txt "crep give" "wc -l" output.txt
-
-bonus_mc1: bonus
-	@./pipex input.txt "grep give" "grep you" "wc -l" output.txt
-
-bonus_mc2: bonus
-	@./pipex input.txt "ls -l" "rep .txt" "grep input" "wc -l" output.txt
-
-bonus_hd: bonus
-	@./pipex here_doc EOF "grep azul" "grep bicicleta" "wc -l" output.txt
 
 .PHONY: all re clean fclean bonus
