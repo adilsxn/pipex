@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acuva-nu <acuva-nu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: acuva-nu <acuva-nu@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 16:01:13 by acuva-nu          #+#    #+#             */
-/*   Updated: 2023/02/18 16:01:13 by acuva-nu         ###   ########.fr       */
+/*   Updated: 2024/01/24 10:28:54 by acuva-nu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,3 @@ void	close_fds(int in, int out)
 	close(out);
 }
 
-void	free_3strs(char *str1, char *str2, char *str3)
-{
-	if (str1)
-	{
-		free(str1);
-		str1 = NULL;
-	}
-	if (str2)
-	{
-		free(str2);
-		str2 = NULL;
-	}
-	if (str3)
-	{
-		free(str3);
-		str3 = NULL;
-	}
-}

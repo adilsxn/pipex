@@ -6,7 +6,7 @@
 /*   By: acuva-nu <acuva-nu@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:13:38 by acuva-nu          #+#    #+#             */
-/*   Updated: 2023/03/01 21:42:58 by acuva-nu         ###   ########.fr       */
+/*   Updated: 2024/01/24 10:32:34 by acuva-nu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	redirection(int in, int out, t_ppx *p)
 static void	parent(t_ppx *p)
 {
 	close_fds(p->in, p->out);
+	p->index--;
 	while (p->index >= 0)
 	{
 		waitpid(p->pids[p->index], NULL, WNOHANG);
@@ -42,7 +43,7 @@ static void	child(t_ppx *p)
 		redirection(p->tube[2 * p->index - 2], p->tube[2 * p->index + 1], p);
 	close_fds(p->in, p->out);
 	p->cmd_path = cmd_finder(p);
-	if (!p->cmd_path)
+	if (!p->cmd_path || !p->cmd_opts)
 		err_out("Error on command_path", p);
 	if (execve(p->cmd_path, p->cmd_opts, p->envp) == -1)
 		err_out("Error trying to execute cmd", p);

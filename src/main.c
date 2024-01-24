@@ -6,7 +6,7 @@
 /*   By: acuva-nu <acuva-nu@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 16:55:13 by acuva-nu          #+#    #+#             */
-/*   Updated: 2023/03/01 21:43:09 by acuva-nu         ###   ########.fr       */
+/*   Updated: 2024/01/24 10:27:26 by acuva-nu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static t_ppx	starter(int ac, char **av, char **envp)
 	else
 		p.hd = 0;
 	p.cmd_nbr = ac - 3 - p.hd;
-	p.in = get_in(&p);
-	p.out = get_out(&p);
+	get_in(&p);
+	get_out(&p);
 	p.pids = malloc(sizeof(p.pids) * p.cmd_nbr);
 	if (!p.pids)
 		err_out("Error allocating space for pids", &p);
