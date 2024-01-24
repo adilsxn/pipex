@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.h                                      :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acuva-nu <acuva-nu@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:03:30 by acuva-nu          #+#    #+#             */
-/*   Updated: 2024/01/24 10:28:44 by acuva-nu         ###   ########.fr       */
+/*   Updated: 2024/01/24 12:44:20 by acuva-nu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_BONUS_H
 # define PIPEX_BONUS_H
 
-# include "get_next_line.h"
-# include "libft.h"
+# include "../libft/inc/libft.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -41,9 +40,10 @@ typedef struct s_ppx
 	char	*cmd_path;
 }			t_ppx;
 
-char		*cmd_finder(t_ppx *p);
-void		err_out(char *s, t_ppx *p);
-void		piper(t_ppx *p);
+char		*cmd_finder(char *cmd, t_ppx *p);
+void	clean_out(int ret_code, t_ppx *p);
+int	err_msg(char *s1, char *s2, char *s3, int ret);
+int	piper(t_ppx *p);
 void		heredoc(t_ppx *p);
 void		free_strs(char **str1, char *str2);
 void		close_fds(int in, int out);

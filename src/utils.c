@@ -1,34 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acuva-nu <acuva-nu@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 16:01:13 by acuva-nu          #+#    #+#             */
-/*   Updated: 2024/01/24 10:28:54 by acuva-nu         ###   ########.fr       */
+/*   Updated: 2024/01/24 12:43:42 by acuva-nu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "pipex.h"
 
-void	err_out(char *s, t_ppx *p)
+int	err_msg(char *s1, char *s2, char *s3, int ret)
 {
-	if (p->cmd_path != NULL)
+	ft_putstr_fd("pipex: ", 2);
+	ft_putstr_fd(s1, 2);
+	ft_putstr_fd(s2, 2);
+	ft_putendl_fd(s3, 2);
+	return(ret);
+}
+void	clean_out(int ret_code, t_ppx *p)
+{
+	if (p)
 	{
-		free(p->cmd_path);
-		p->cmd_path = NULL;
+		if (p->cmd_path != NULL || p->cmd_opts != NULL)
+			free_strs(p->cmd_opts, p->cmd_path);
+		if (p->pids != NULL)
+			free(p->pids);
+		if (p->tube != NULL)
+			free(p->tube);
 	}
-	if (p->cmd_opts != NULL)
-		free_strs(p->cmd_opts, NULL);
-	if (p->pids != NULL)
-		free(p->pids);
-	if (p->tube != NULL)
-		free(p->tube);
 	if (p->hd == 1)
 		unlink(".tmpfile");
-	perror(s);
-	exit(EXIT_FAILURE);
+	exit(ret_code);
 }
 
 void	free_strs(char **str1, char *str2)

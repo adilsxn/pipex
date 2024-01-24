@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_bonus.c                                     :+:      :+:    :+:   */
+/*   env_parser.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acuva-nu <acuva-nu@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:37:47 by acuva-nu          #+#    #+#             */
-/*   Updated: 2023/03/01 21:19:21 by acuva-nu         ###   ########.fr       */
+/*   Updated: 2024/01/24 12:40:29 by acuva-nu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "pipex.h"
 
 static char	*get_path(char **envp)
 {
@@ -49,26 +49,30 @@ static char	**useful_paths(char **envp)
 	return (paths);
 }
 
-char	*cmd_finder(t_ppx *p)
+char	*cmd_finder(char *cmd, t_ppx *p)
 {
 	char	**paths;
 	char	*path;
 	int		i;
 
-	paths = useful_paths(p->envp);
-	p->cmd_opts = ft_split(p->av[p->index + 2 + p->hd], ' ');
-	if (!p->cmd_opts)
-		err_out("Error on cmd_opts", p);
 	i = -1;
+	if (access(cmd, F_OK | X_OK) == 0)
+			return (ft_strdup(cmd));
+	path = NULL;
+	paths = useful_paths(p->envp);
+	if (!paths)
+		return (NULL);
 	while (paths[++i])
 	{
-		path = ft_strjoin(paths[i], p->cmd_opts[0]);
+		path = ft_strjoin(paths[i], cmd);
 		if (!path)
-			return (NULL);
+		{
+			free_strs(paths, NULL);
+			clean_out(err_msg("path error", "", "", 1), p);
+		}
 		if (access(path, F_OK | X_OK) == 0)
-			return (ft_strdup(path));
-		free(path);
+			break; 
 	}
 	free_strs(paths, NULL);
-	return (NULL);
+	return (path);
 }
